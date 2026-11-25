@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agri Knowledge – AI Prototype</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef5f0;--card:#fff;--tx:#14261c;--mut:#587064;--bd:#d3e3da;--g:#3d8b6e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a14;--card:#1b261e;--tx:#e8f0e9;--mut:#9db0a0;--bd:#2c3b2f}}
+:root[data-theme="dark"]{--bg:#121a14;--card:#1b261e;--tx:#e8f0e9;--mut:#9db0a0;--bd:#2c3b2f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,color-mix(in srgb,var(--g) 16%,var(--bg)) 0,var(--bg) 380px) no-repeat var(--bg);color:var(--tx);font:15px/1.55 system-ui,-apple-system,"Segoe UI","Noto Sans Tamil","Noto Sans Devanagari",sans-serif}
+.hero{background:linear-gradient(135deg,var(--g),color-mix(in srgb,var(--g) 55%,#000));color:#fff;padding:18px 16px 18px;margin-bottom:6px;border-radius:0 0 26px 26px;box-shadow:0 8px 24px color-mix(in srgb,var(--g) 30%,transparent)}
+.wrap{max-width:760px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:20px;margin:0}
+.hero p{margin:4px 0 10px;font-size:13px;opacity:.92}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hero select{width:auto;padding:6px 8px;background:#ffffff26;color:#fff;border-color:#ffffff55}
+.hero select option{color:#000}
+.sw{width:22px;height:22px;border-radius:50%;border:2px solid #fff;cursor:pointer;padding:0}
+.pill{background:#fff;color:var(--g);border:0;border-radius:99px;padding:6px 12px;font:inherit;font-weight:600;cursor:pointer}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px 12px;max-width:760px;margin:0 auto;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav button{min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+nav button.on{background:var(--g);border-color:var(--g);color:#fff}
+main{max-width:760px;margin:0 auto;padding:0 16px 40px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px;margin:0 0 14px;box-shadow:0 2px 10px color-mix(in srgb,var(--g) 10%,transparent)}
+h2{font-size:16px;margin:0 0 8px}
+.mut{color:var(--mut);font-size:13px}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 4px}
+select,textarea,input{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+textarea{min-height:80px;resize:vertical}
+.btn{margin:10px 8px 0 0;padding:10px 16px;border:0;border-radius:10px;background:var(--g);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.btn.alt{background:color-mix(in srgb,var(--g) 15%,var(--card));color:var(--g)}
+.btn:disabled{opacity:.6}
+.out{white-space:pre-wrap;background:color-mix(in srgb,var(--g) 12%,var(--card));border-radius:10px;padding:10px;margin-top:10px;display:none}
+.row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--bd)}
+.row:first-of-type{border-top:0}
+.up{color:var(--g)}.dn{color:#c0392b}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:color-mix(in srgb,var(--g) 15%,var(--card));color:var(--g)}
+.opt{display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit;cursor:pointer}
+.opt.sel{border-color:var(--g);background:color-mix(in srgb,var(--g) 18%,var(--card))}
+.cert{border:3px double var(--g);border-radius:12px;padding:20px 14px;text-align:center;background:var(--card);margin-top:10px}
+.cert h3{margin:0;color:var(--g);font-size:20px;letter-spacing:1px}
+.cert .nm{font-size:22px;font-weight:700;margin:8px 0}
+.dash{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 14px}.tile{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:10px 2px;text-align:center;box-shadow:0 2px 10px color-mix(in srgb,var(--g) 10%,transparent)}.tile b{display:block;font-size:20px;color:var(--g)}.tile span{font-size:11px;color:var(--mut)}.pv{display:block;width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-top:10px}input[type=file]{padding:8px}
+nav .ic{font-size:22px;line-height:1}nav .lb{font-size:12px;font-weight:700;line-height:1.15;text-align:center}.hint{font-size:12px;color:var(--mut);text-align:center;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="hero"><div class="wrap">
+  <div class="top"><h1>🌾 Agri Knowledge AI</h1><button class="pill" id="prof" onclick="openProfile()"></button></div>
+  <p>AI tutors for everyone · human mentors for guidance · certificates for learners</p>
+  <div class="ctl"><select id="lang" aria-label="Language"></select></div>
+</div></div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<script>
+/* Standalone shim: makes the app work in any browser (Chrome, Safari, Firefox, Edge, mobile).
+   Inside Claude the real window.claude is used; everywhere else this provides the same API. */
+(function(){
+if(window.claude&&typeof window.claude.use==='function')return;
+// ---- CONFIG: for production, point ENDPOINT to your own server that holds the API key ----
+var CFG={ENDPOINT:'https://api.anthropic.com/v1/messages',MODEL:'claude-sonnet-5-5',MAX_TOKENS:1000};
+function getKey(){
+  var k='';try{k=localStorage.getItem('agri_apikey')||''}catch(e){}
+  if(!k&&CFG.ENDPOINT.indexOf('anthropic.com')>-1){
+    k=(prompt('Enter your Anthropic API key to enable AI (stored only in this browser):')||'').trim();
+    if(k){try{localStorage.setItem('agri_apikey',k)}catch(e){}}
+  }
+  return k;
+}
+function b64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(',')[1])};r.onerror=rej;r.readAsDataURL(blob)})}
+function call(prompt_,opts){
+  opts=opts||{};var key=getKey();
+  if(!key&&CFG.ENDPOINT.indexOf('anthropic.com')>-1){var e=new Error('no_key');e.code='no_key';return Promise.reject(e)}
+  var imgs=(opts.images||[]);
+  return Promise.all(imgs.map(function(b){return b64(b).then(function(d){return{type:'image',source:{type:'base64',media_type:b.type||'image/jpeg',data:d}}})})).then(function(parts){
+    parts.push({type:'text',text:prompt_});
+    var h={'Content-Type':'application/json'};
+    if(CFG.ENDPOINT.indexOf('anthropic.com')>-1){h['x-api-key']=key;h['anthropic-version']='2023-06-01';h['anthropic-dangerous-direct-browser-access']='true'}
+    return fetch(CFG.ENDPOINT,{method:'POST',headers:h,body:JSON.stringify({model:CFG.MODEL,max_tokens:CFG.MAX_TOKENS,messages:[{role:'user',content:parts}]})});
+  }).then(function(r){
+    if(r.status===401){try{localStorage.removeItem('agri_apikey')}catch(e){}}
+    if(!r.ok){var e=new Error('http '+r.status);e.code='http_'+r.status;throw e}
+    return r.json();
+  }).then(function(j){
+    var t=(j.content||[]).map(function(c){return c.text||''}).join('');
+    if(opts.onText)opts.onText({text:t});
+    return{text:t};
+  });
+}
+function sample(p,o){return call(p,o)}
+sample.json=function(p,o){return call(p,o).then(function(r){return JSON.parse(r.text.replace(/```json|```/g,'').trim())})};
+var downloads={save:function(o){return new Promise(function(res){
+  var blob=new Blob([o.data],{type:/\.html$/.test(o.filename)?'text/html':'text/plain'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=o.filename;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();res()},500)})}};
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition,dictation=null;
+if(SR){var rec=null,fin=[],st=[];
+  dictation={onFinal:function(f){fin.push(f)},onState:function(f){st.push(f)},
+   start:function(){return new Promise(function(res,rej){
+     rec=new SR();rec.lang=(typeof LC!=='undefined'&&typeof LANGS!=='undefined'&&LC[LANGS.indexOf(document.getElementById('lang').value)])||'en-IN';
+     rec.interimResults=false;
+     rec.onresult=function(e){var t='';for(var i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)t+=e.results[i][0].transcript;if(t)fin.forEach(function(f){f({text:t})})};
+     rec.onstart=function(){st.forEach(function(f){f({state:'listening'})});res()};
+     rec.onend=function(){st.forEach(function(f){f({state:'idle'})})};
+     rec.onerror=function(e){if(e.error==='not-allowed'||e.error==='service-not-allowed')rej(e)};
+     try{rec.start()}catch(e){rej(e)}})},
+   stop:function(){try{rec&&rec.stop()}catch(e){}}};}
+var svc={sample:sample,downloads:downloads,dictation:dictation};
+window.claude={use:function(n){return Promise.resolve(svc[n])}};
+})();
+</script>
+<script>
+var LANGS=['Tamil (தமிழ்)','English','Hindi (हिन्दी)','Telugu (తెలుగు)','Kannada (ಕನ್ನಡ)','Malayalam (മലയാളം)','Marathi (मराठी)','Bengali (বাংলা)','Gujarati (ગુજરાતી)','Punjabi (ਪੰਜਾਬੀ)','Odia (ଓଡ଼ିଆ)','Urdu (اردو)'];
+var THEMES={Green:'#3d8b6e'};
+var PRICES=[['Tomato','₹24/kg','+₹2',1],['Onion','₹31/kg','−₹1',0],['Paddy','₹2,183/qtl','+₹0',1],['Banana','₹38/kg','+₹3',1]];
+var SYS='You are Agri Knowledge AI, a friendly agricultural assistant for small farmers and students in India. Use simple words. Never invent exact pesticide doses; say to follow the product label and consult the nearest agriculture office for serious cases. ';
+var tab='farmer',sample=null,downloads=null,me=null,quiz=null,pick=[],lastTopic='',lastLesson='',certs=[],qs=[];
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function ld(k,d){try{var v=localStorage.getItem('agri_'+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem('agri_'+k,JSON.stringify(v))}catch(e){}}
+me=ld('me',null);certs=ld('certs',[]);qs=ld('qs',[]);
+function L(){return $('lang').value}
+$('lang').innerHTML=LANGS.map(function(l){return '<option>'+l+'</option>'}).join('');
+$('lang').value=ld('lang','Tamil (தமிழ்)');
+$('lang').onchange=function(){sv('lang',L())};
+function theme(n){document.documentElement.style.setProperty('--g',THEMES[n]);sv('theme',n)}
+
+theme('Green');
+claude.use('sample').then(function(s){sample=s;render();processQueue()}).catch(function(){});
+claude.use('downloads').then(function(d){downloads=d}).catch(function(){});
+function ai(prompt,outId,btn,done){
+  var o=$(outId);o.style.display='block';
+  if(!navigator.onLine){var qq=ld('queue',[]);qq.push({p:prompt,l:L(),d:new Date().toISOString().slice(0,10)});sv('queue',qq);o.textContent='📴 You are offline. Your question is saved. AI will answer it automatically when internet returns (see Farm Tools → Offline guide).';return}
+  if(!sample){o.textContent='AI is not available right now. Please reload the page.';return}
+  btn.disabled=true;o.textContent='AI is thinking…';
+  sample(SYS+'Reply in '+L()+'.\n\n'+prompt,{cache:false,onText:function(t){o.textContent=t.text}}).then(function(r){o.textContent=r.text;btn.disabled=false;if(done)done(r.text)}).catch(function(e){btn.disabled=false;o.textContent=(e&&e.code==='not_granted')?'AI permission was declined.':(e&&e.code==='no_key')?'API key needed to use AI. Tap the button again and enter your key.':(e&&e.code==='http_401')?'Invalid API key. Tap again to re-enter it.':'AI error, please try again.'});
+}
+function nav(){$('nav').innerHTML=[['farmer','🌾','Farmer'],['ftools','🧰','Farm Tools'],['student','🎓','Student'],['slab','🧪','Learn Lab'],['mentor','🧑‍🏫','Mentor']].map(function(r){return '<button class="'+(tab===r[0]?'on':'')+'" onclick="tab=\''+r[0]+'\';render()"><span class="ic">'+r[1]+'</span><span class="lb">'+r[2]+'</span></button>'}).join('');
+  $('prof').textContent=me?('👤 '+me.name):'Sign in (optional)'}
+function render(){nav();$('app').innerHTML=(sample?'':'<p class="mut">Connecting to AI…</p>')+offBanner()+dash()+(tab==='farmer'?farmer():tab==='ftools'?ftools():tab==='student'?student():tab==='slab'?slab():mentor())+'<p class="hint">Prototype: demo sign-in is stored only in this browser. AI answers are guidance, not a substitute for local agriculture officers.</p>'}
+/* profile */
+function openProfile(){
+  var d=$('app');d.innerHTML='<div class="card"><h2>'+(me?'Your profile':'Sign in')+'</h2><p class="mut">Optional for farmers and students. Mentors sign in to answer questions.</p><label>Name</label><input id="pn" value="'+esc(me?me.name:'')+'"><label>I am a</label><select id="pr"><option value="student">Student</option><option value="farmer">Farmer</option><option value="mentor">Mentor</option></select><label>Expertise / interests (mentors)</label><input id="pe" value="'+esc(me?me.exp||'':'')+'" placeholder="e.g. Paddy, soil, drip irrigation"><button class="btn" onclick="saveProfile()">Save</button>'+(me?'<button class="btn alt" onclick="me=null;sv(\'me\',null);render()">Sign out</button>':'')+'<button class="btn alt" onclick="render()">Cancel</button></div>';
+  if(me)$('pr').value=me.role}
+function saveProfile(){var n=$('pn').value.trim();if(!n){alert('Enter your name.');return}me={name:n,role:$('pr').value,exp:$('pe').value.trim()};sv('me',me);tab=me.role;render()}
+/* farmer */
+function farmer(){
+  var mine=qs.map(function(q,i){return {q:q,i:i}}).filter(function(x){return x.q.answer});
+  return scanCard()+'<div class="card"><h2>🤖 AI crop doctor</h2><label>Crop</label><select id="crop"><option>Tomato</option><option>Paddy</option><option>Banana</option><option>Onion</option><option>Other</option></select><label>What are you seeing?</label><textarea id="txt" placeholder="e.g. brown spots on leaves after rain"></textarea><button class="btn" id="b1" onclick="diagnose(this)">Get AI guidance</button><div id="o1" class="out"></div><div id="after" style="display:none"><button class="btn alt" onclick="askMentor()">Ask a human mentor too</button></div></div>'+
+  '<div class="card"><h2>🧑‍🏫 Mentor answers</h2>'+(mine.length?mine.map(function(x){return '<div class="row" style="display:block"><b>'+esc(x.q.crop)+'</b> · '+esc(x.q.text)+'<br><span class="tag">'+esc(x.q.mentor)+'</span> '+esc(x.q.answer)+'</div>'}).join(''):'<p class="mut">No mentor replies yet. Use “Ask a human mentor too” after an AI answer.</p>')+'</div>'+
+  '<div class="card"><h2>📈 Market prices (sample data)</h2>'+PRICES.map(function(p){return '<div class="row"><span>'+p[0]+'</span><span><b>'+p[1]+'</b> <span class="'+(p[3]?'up':'dn')+'">'+p[2]+'</span></span></div>'}).join('')+'<label>Your crop</label><select id="mcrop">'+PRICES.map(function(p){return '<option>'+p[0]+'</option>'}).join('')+'</select><button class="btn" onclick="market(this)">Should I sell now?</button><div id="o2" class="out"></div></div>'+
+  '<div class="card"><h2>🌦️ Weather &amp; water advice</h2><label>Your place and crop</label><input id="wp" placeholder="e.g. Madurai, paddy"><button class="btn" onclick="water(this)">Ask AI</button><div id="o3" class="out"></div><p class="mut">No live weather yet; AI gives general guidance.</p></div>';
+}
+function diagnose(b){var t=$('txt').value.trim();if(!t){alert('Please describe the problem.');return}var c=$('crop').value;
+  ai('Crop: '+c+'\nProblem: '+t+'\nGive: 1) likely cause(s), 2) what to do today, 3) prevention, 4) when to contact the agriculture office. Max 150 words.','o1',b,function(){window._last={crop:c,text:t};$('after').style.display='block'})}
+function askMentor(){if(!window._last)return;qs.push({crop:window._last.crop,text:window._last.text,from:me?me.name:'Anonymous farmer'});sv('qs',qs);window._last=null;$('after').innerHTML='<span class="tag">Sent to mentors ✓</span>'}
+function market(b){var c=$('mcrop').value;ai('Sample prices: '+PRICES.map(function(p){return p.slice(0,3).join(' ')}).join('; ')+'.\nFarmer grows '+c+'. Say simply whether to sell now or wait (these are sample prices) and give 2 tips. Max 100 words.','o2',b)}
+function water(b){var p=$('wp').value.trim();if(!p)return;ai('Farmer place and crop: '+p+'. Give water-saving and irrigation tips and weather risks to watch. Say you have no live weather. Max 120 words.','o3',b)}
+/* dashboard + photo scan */
+var photo=null,scanTxt='',scans=ld('scans',0);
+function dashInner(){return [['📷',scans,'Photo scans'],['❓',qs.length,'Questions'],['🏅',certs.length,'Certificates'],['🌐',LANGS.length,'Languages']].map(function(t){return '<div class="tile"><i>'+t[0]+'</i><b>'+t[1]+'</b><span>'+t[2]+'</span></div>'}).join('')}
+function dash(){return '<div id="dash" class="dash">'+dashInner()+'</div>'}
+function scanCard(){return '<div class="card"><h2>📷 Photo scan</h2><p class="mut">Take a photo of the leaf, fruit or plant and ask AI.</p><input type="file" id="ph" accept="image/*" capture="environment" onchange="pickPhoto(this)">'+(photo?'<img class="pv" src="'+photo.url+'" alt="Selected crop photo">':'')+'<label>Your question (optional)</label><input id="pq" placeholder="e.g. Is this a disease? What should I spray?"><button class="btn" onclick="scan(this)">Ask AI about this photo</button><div id="o0" class="out"'+(scanTxt?' style="display:block"':'')+'>'+esc(scanTxt)+'</div><div id="after0" style="display:'+(scanTxt?'block':'none')+'"><button class="btn alt" onclick="askMentor0()">Ask a human mentor too</button></div></div>'}
+function pickPhoto(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,1024/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(function(b){photo={url:c.toDataURL('image/jpeg',0.8),blob:b};scanTxt='';render()},'image/jpeg',0.85)};im.src=r.result};r.readAsDataURL(f)}
+function scan(b){if(!photo){alert('Take or choose a photo first.');return}var o=$('o0'),q=$('pq').value.trim();o.style.display='block';if(!sample){o.textContent='AI is not available right now. Please reload the page.';return}
+  if(!navigator.onLine){o.textContent='📴 Offline: photo scan needs internet. Use the offline guide in Farm Tools, then try again online.';return}b.disabled=true;o.textContent='AI is looking at your photo…';
+  sample(SYS+'Reply in '+L()+'.\n\nLook at this crop photo. Say: 1) crop and what you can see, 2) likely problem with confidence (low/medium/high), 3) what to do today, 4) prevention. If the photo is unclear, ask for a clearer one. '+(q?'Farmer asks: '+q:'')+' Max 150 words.',{images:[photo.blob],cache:false,onText:function(t){o.textContent=t.text}}).then(function(r){scanTxt=r.text;o.textContent=r.text;b.disabled=false;scans++;sv('scans',scans);$('dash').innerHTML=dashInner();window._q0=q;$('after0').style.display='block'}).catch(function(e){b.disabled=false;o.textContent=(e&&e.code==='not_granted')?'AI permission was declined.':'Photo analysis failed. Try a smaller or clearer photo.'})}
+function askMentor0(){qs.push({crop:'Photo scan',text:(window._q0||'Please check this crop photo')+' — AI finding: '+scanTxt.slice(0,300),from:me?me.name:'Anonymous farmer'});sv('qs',qs);$('after0').innerHTML='<span class="tag">Sent to mentors ✓</span>'}
+/* student */
+function student(){
+  var q='';
+  if(quiz){q='<div class="card"><h2>📝 Quiz: '+esc(lastTopic)+'</h2>'+quiz.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.q)+'</b></p>'+x.options.map(function(o,j){return '<button class="opt'+(pick[i]===j?' sel':'')+'" onclick="pick['+i+']='+j+';render()">'+esc(o)+'</button>'}).join('')}).join('')+'<button class="btn" onclick="submitQuiz()">Submit quiz</button><div id="res"></div></div>'}
+  return '<div class="card"><h2>📚 AI tutor</h2>'+(me?'':'<p class="mut">You can learn without signing in. Sign in (top right) to keep your certificates.</p>')+'<label>What do you want to learn?</label><input id="topic" placeholder="e.g. drip irrigation, soil health card"><button class="btn" onclick="tutor(this)">Teach me</button><div id="o4" class="out"></div><div id="qb" style="display:none"><button class="btn alt" onclick="makeQuiz(this)">Take quiz for certificate</button></div></div>'+q+
+  '<div class="card"><h2>🏅 My certificates</h2>'+(certs.length?certs.map(function(c,i){return '<div class="row"><span><b>'+esc(c.topic)+'</b><br><span class="mut">'+esc(c.name)+' · '+c.date+' · '+c.score+'/3</span></span><button class="btn alt" style="margin:0" onclick="showCert('+i+')">View</button></div>'}).join(''):'<p class="mut">Pass a quiz (2 of 3 correct) to earn one.</p>')+'<div id="certbox"></div></div>'+
+  '<div class="card"><h2>🧑‍🏫 Ask a mentor</h2><input id="mq" placeholder="Your question for a human mentor"><button class="btn" onclick="askMentorS()">Send</button><div id="ms"></div></div>';
+}
+function tutor(b){var t=$('topic').value.trim();if(!t)return;lastTopic=t;quiz=null;ai('Teach a student about "'+t+'" in farming: a short, clear lesson (max 150 words) with one real-life example.','o4',b,function(x){lastLesson=x;var l=ld('lessons',[]);l.push({t:lastTopic,x:x});sv('lessons',l.slice(-10));$('qb').style.display='block'})}
+function makeQuiz(b){if(!sample)return;b.disabled=true;b.textContent='Preparing quiz…';
+  sample.json(SYS+'Write a 3-question multiple-choice quiz in '+L()+' about "'+lastTopic+'" based on this lesson:\n'+lastLesson+'\nReturn ONLY JSON: [{"q":"...","options":["a","b","c","d"],"answer":0}] where answer is the index of the correct option.',{cache:false}).then(function(j){quiz=j.slice(0,3);pick=[];render()}).catch(function(){b.disabled=false;b.textContent='Quiz failed, try again'})}
+function submitQuiz(){if(pick.filter(function(p){return p!==undefined}).length<quiz.length){alert('Answer all questions.');return}
+  var s=quiz.reduce(function(a,x,i){return a+(pick[i]===x.answer?1:0)},0);recStat(lastTopic,s);
+  if(s>=2){var nm=me?me.name:(prompt('Name for your certificate:')||'Learner');var c={name:nm,topic:lastTopic,date:new Date().toISOString().slice(0,10),score:s,id:'AK-'+Date.now().toString(36).toUpperCase()};certs.push(c);sv('certs',certs);quiz=null;render();showCert(certs.length-1)}
+  else{$('res').innerHTML='<p><b>Score '+s+'/3.</b> Review the lesson and try again.</p>';quiz=null;setTimeout(render,1800)}}
+function certHtml(c){return '<div class="cert"><div class="mut">AGRI KNOWLEDGE AI</div><h3>CERTIFICATE OF COMPLETION</h3><p class="mut">This is to certify that</p><div class="nm">'+esc(c.name)+'</div><p class="mut">has successfully completed the AI-guided course on</p><b>'+esc(c.topic)+'</b><p class="mut">Score '+c.score+'/3 · '+c.date+' · ID '+c.id+'</p></div>'}
+function showCert(i){var c=certs[i];$('certbox').innerHTML=certHtml(c)+'<button class="btn" onclick="dl('+i+')">Download certificate</button>';$('certbox').scrollIntoView({block:'center'})}
+function dl(i){var c=certs[i];if(!downloads){alert('Download not available here. Take a screenshot instead.');return}
+  var h='<!DOCTYPE html><meta charset="utf-8"><title>Certificate</title><body style="font-family:sans-serif;text-align:center;padding:40px"><div style="border:6px double '+THEMES.Green+';padding:40px;max-width:700px;margin:auto"><p>AGRI KNOWLEDGE AI</p><h1>CERTIFICATE OF COMPLETION</h1><p>This is to certify that</p><h2>'+esc(c.name)+'</h2><p>has successfully completed the AI-guided course on</p><h3>'+esc(c.topic)+'</h3><p>Score '+c.score+'/3 · '+c.date+' · ID '+c.id+'</p></div>';
+  downloads.save({filename:'certificate-'+c.id+'.html',data:h}).catch(function(){})}
+function askMentorS(){var t=$('mq').value.trim();if(!t)return;qs.push({crop:'Student question',text:t,from:me?me.name:'Anonymous student'});sv('qs',qs);$('mq').value='';$('ms').innerHTML='<span class="tag">Sent to mentors ✓</span>'}
+/* mentor */
+function mentor(){
+  if(!me||me.role!=='mentor')return '<div class="card"><h2>🧑‍🏫 Mentor space</h2><p class="mut">Mentors sign in with a profile to answer farmers and students.</p><button class="btn" onclick="openProfile()">Sign in as mentor</button></div>';
+  var open=qs.map(function(q,i){return {q:q,i:i}}).filter(function(x){return !x.q.answer});
+  return '<div class="card"><h2>Welcome, '+esc(me.name)+'</h2><p class="mut">'+(me.exp?'Expertise: '+esc(me.exp):'Add expertise in your profile.')+'</p></div><div class="card"><h2>Open questions ('+open.length+')</h2>'+(open.length?open.map(function(x){return '<div style="margin-bottom:14px"><span class="tag">'+esc(x.q.from)+'</span> <b>'+esc(x.q.crop)+'</b><div class="mut">'+esc(x.q.text)+'</div><textarea id="a'+x.i+'" placeholder="Your guidance…"></textarea><button class="btn alt" onclick="draft('+x.i+',this)">Draft with AI</button><button class="btn" onclick="reply('+x.i+')">Send answer</button></div>'}).join(''):'<p class="mut">Nothing waiting. Ask a question from the Farmer or Student tab to see it here.</p>')+'</div>';
+}
+function draft(i,b){if(!sample)return;b.disabled=true;sample(SYS+'Reply in '+L()+'. Draft a short helpful answer a mentor can edit.\nQuestion: '+qs[i].text,{cache:false}).then(function(r){$('a'+i).value=r.text;b.disabled=false}).catch(function(){b.disabled=false})}
+function reply(i){var t=$('a'+i).value.trim();if(!t)return;qs[i].answer=t;qs[i].mentor=me.name;sv('qs',qs);render()}
+/* ===== Farm tools & Learning lab ===== */
+var LC=['ta-IN','en-IN','hi-IN','te-IN','kn-IN','ml-IN','mr-IN','bn-IN','gu-IN','pa-IN','or-IN','ur-IN'],dict=null,dHook=false,lastVoice='';
+function card(t,b){return '<div class="card"><h2>'+t+'</h2>'+b+'</div>'}
+function ftools(){
+  var dr=ld('diary',[]),al=ld('alerts',[]);
+  return guideCard()+card('🎤 Voice assistant','<p class="mut">Speak your question and hear the answer. Needs Chrome or the Claude app; voice for some languages depends on your phone.</p><textarea id="vq" placeholder="Tap the mic and speak, or type"></textarea><button class="btn alt" onclick="mic(this)">🎤 Speak</button><button class="btn" onclick="voice(this)">Ask AI</button><button class="btn alt" onclick="say()">🔊 Read aloud</button><div id="ov" class="out"></div>')+
+  card('📒 Crop diary + AI insights','<select id="dt"><option>Sowing</option><option>Irrigation</option><option>Spraying</option><option>Fertiliser</option><option>Rain</option><option>Pest seen</option></select><label>Note</label><input id="dn" placeholder="e.g. 2 hrs drip, 10 kg urea"><button class="btn" onclick="addDiary()">Add entry</button><button class="btn alt" onclick="diaryAI(this)">AI insights &amp; warnings</button><div id="od" class="out"></div>'+dr.slice(-5).reverse().map(function(e){return '<div class="row"><span>'+e.d+' · <b>'+e.t+'</b></span><span class="mut">'+esc(e.n)+'</span></div>'}).join(''))+
+  card('💰 Cost &amp; profit planner','<label>Seed, fertiliser, labour, other costs (₹)</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input id="c1" type="number" placeholder="Seed"><input id="c2" type="number" placeholder="Fertiliser"><input id="c3" type="number" placeholder="Labour"><input id="c4" type="number" placeholder="Other"></div><label>Expected yield (kg) and price (₹/kg)</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input id="cy" type="number" placeholder="Yield kg"><input id="cp" type="number" placeholder="Price ₹/kg"></div><button class="btn" onclick="plan(this)">Calculate</button><div id="op0" class="out"></div><div id="op" class="out"></div>')+
+  card('🏛️ Scheme &amp; subsidy finder','<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><input id="sa" type="number" placeholder="Acres"><input id="sc" placeholder="Crop"><input id="ss" placeholder="State"></div><button class="btn" onclick="schemes(this)">Find schemes</button><div id="osc" class="out"></div><p class="mut">Always confirm at the agriculture office or the official portal.</p>')+
+  card('🚨 Local pest &amp; weather alerts','<select id="at"><option>Pest outbreak</option><option>Crop disease</option><option>Flood / heavy rain</option><option>Wild animals</option></select><label>Village</label><input id="av" placeholder="Village name"><button class="btn" onclick="addAlert()">Warn nearby farmers</button>'+(al.length?al.slice(-5).reverse().map(function(a){return '<div class="row"><span>⚠️ <b>'+esc(a.t)+'</b> · '+esc(a.v)+'</span><span class="mut">'+a.d+'</span></div>'}).join(''):'<p class="mut">No alerts yet.</p>')+'<p class="mut">Demo: alerts are stored on this device. A real version shares them with farmers near you.</p>');
+}
+function mic(b){
+  if(dict===null){claude.use('dictation').then(function(d){dict=d||false;mic(b)});return}
+  if(!dict){alert('Voice input is not available here. Please type your question.');return}
+  if(!dHook){dHook=true;dict.onFinal(function(r){var v=$('vq');if(v)v.value+=(v.value?' ':'')+r.text});dict.onState(function(s){b.textContent=s.state==='listening'?'⏹ Stop':'🎤 Speak'})}
+  if(b.textContent.indexOf('Stop')>-1)dict.stop();else dict.start().catch(function(){alert('Microphone permission was not given.')})}
+function voice(b){var q=$('vq').value.trim();if(!q)return;ai('A farmer asks by voice: '+q+'\nAnswer in 3 short, simple spoken sentences. No lists, symbols or markdown.','ov',b,function(t){lastVoice=t;say()})}
+function say(){try{var t=lastVoice||($('ov')&&$('ov').textContent);if(!t)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang=LC[LANGS.indexOf(L())]||'en-IN';speechSynthesis.speak(u)}catch(e){alert('Reading aloud is not supported here.')}}
+function addDiary(){var n=$('dn').value.trim();if(!n)return;var d=ld('diary',[]);d.push({d:new Date().toISOString().slice(0,10),t:$('dt').value,n:n});sv('diary',d);render()}
+function diaryAI(b){var d=ld('diary',[]);if(!d.length){alert('Add a few diary entries first.');return}ai('Farm diary entries (date, type, note):\n'+d.slice(-30).map(function(e){return e.d+' | '+e.t+' | '+e.n}).join('\n')+'\nFind patterns (e.g. pests after rain, over-watering), give early warnings and 3 next steps. Max 150 words.','od',b)}
+function plan(b){var g=function(i){return +$(i).value||0},c=g('c1')+g('c2')+g('c3')+g('c4'),r=g('cy')*g('cp'),p=r-c,o=$('op0');o.style.display='block';o.textContent='Cost ₹'+c+' · Revenue ₹'+r+' · '+(p>=0?'Profit ₹':'Loss ₹')+Math.abs(p)+(c?' · Return '+Math.round(p/c*100)+'%':'');if(!c&&!r)return;ai('Farmer plan: cost ₹'+c+' (seed '+g('c1')+', fertiliser '+g('c2')+', labour '+g('c3')+', other '+g('c4')+'), expected revenue ₹'+r+', profit ₹'+p+'. Give 3 practical tips to raise profit and one risk to watch, and say if switching crop next season may help. Max 100 words.','op',b)}
+function schemes(b){var a=$('sa').value,c=$('sc').value.trim(),s=$('ss').value.trim();if(!c||!s){alert('Enter crop and state.');return}ai('Indian farmer: '+(a||'?')+' acres, crop '+c+', state '+s+'. List government schemes they may qualify for (e.g. PM-KISAN, crop insurance, Kisan Credit Card, soil health card, state schemes) with one-line eligibility, documents needed and a simple application checklist. Say rules change, so verify officially. Max 180 words.','osc',b)}
+function addAlert(){var v=$('av').value.trim();if(!v)return;var a=ld('alerts',[]);a.push({t:$('at').value,v:v,d:new Date().toISOString().slice(0,10)});sv('alerts',a);render()}
+/* ===== Offline mode ===== */
+var OG={Tomato:[['Water at the base in the morning; wet leaves invite blight.','காலையில் வேரில் நீர் பாய்ச்சுங்கள்; இலை நனைந்தால் கருகல் நோய் வரும்.'],['Remove spotted leaves and burn them; do not compost.','புள்ளி விழுந்த இலைகளை அகற்றி எரியுங்கள்.'],['Stake plants for airflow and rotate crops every season.','காற்றோட்டத்துக்கு குச்சி கட்டி, ஒவ்வொரு பருவமும் பயிர் சுழற்சி செய்யுங்கள்.']],
+Paddy:[['Keep 2–5 cm water while tillering; drain once before harvest.','தூர் கட்டும் போது 2–5 செ.மீ நீர் வையுங்கள்; அறுவடைக்கு முன் வடிக்கவும்.'],['Use nitrogen in measured amounts; too much invites blast and pests.','தழைச்சத்து அளவாக இடுங்கள்; அதிகமானால் குலை நோய், பூச்சி வரும்.'],['Alternate wetting and drying saves water.','மாற்றி மாற்றி நீர் கட்டி உலர வைத்தால் நீர் மிச்சம்.']],
+Banana:[['Remove side suckers; keep one follower.','பக்கக் கன்றுகளை நீக்கி ஒன்றை மட்டும் வையுங்கள்.'],['Mulch around the plant to hold moisture.','நீர் காக்க தழைக்கூளம் இடுங்கள்.'],['Cut and destroy leaves with heavy spots (Sigatoka).','அதிகம் புள்ளி உள்ள இலைகளை வெட்டி அழியுங்கள்.']],
+Onion:[['Avoid waterlogging; use raised beds.','நீர் தேங்காமல் மேட்டுப்பாத்தி அமையுங்கள்.'],['Stop watering 10–15 days before harvest.','அறுவடைக்கு 10–15 நாள் முன் நீர் நிறுத்துங்கள்.'],['Dry bulbs in shade for 2–3 days before storage.','சேமிக்கும் முன் நிழலில் 2–3 நாள் உலர்த்துங்கள்.']]};
+function guideHtml(c){return OG[c].map(function(t){return '<div class="row" style="display:block">✅ '+t[0]+'<br><span class="mut">'+t[1]+'</span></div>'}).join('')+'<p class="mut">For serious problems, contact your nearest agriculture office. / கடுமையான பிரச்சினைக்கு அருகிலுள்ள வேளாண் அலுவலகத்தை அணுகுங்கள்.</p>'}
+function showGuide(){$('ogo').innerHTML=guideHtml($('og').value)}
+function guideCard(){var ls=ld('lessons',[]),qa=ld('qa',[]),qu=ld('queue',[]);
+  return card('📴 Offline guide','<p class="mut">Works with no internet: built-in crop tips (English + தமிழ்), saved lessons and saved AI answers.</p><select id="og" onchange="showGuide()">'+Object.keys(OG).map(function(k){return '<option>'+k+'</option>'}).join('')+'</select><div id="ogo">'+guideHtml('Tomato')+'</div>'+
+  (ls.length?'<h2 style="margin-top:12px">Saved lessons</h2>'+ls.slice().reverse().map(function(l){return '<details><summary><b>'+esc(l.t)+'</b></summary><div class="mut" style="white-space:pre-wrap">'+esc(l.x)+'</div></details>'}).join(''):'')+
+  (qu.length?'<p class="mut">⏳ '+qu.length+' question(s) waiting for internet.</p>':'')+
+  (qa.length?'<h2 style="margin-top:12px">Saved answers</h2>'+qa.slice().reverse().map(function(a){return '<details><summary><b>'+esc(a.q)+'</b> <span class="mut">'+a.d+'</span></summary><div style="white-space:pre-wrap">'+esc(a.a)+'</div></details>'}).join(''):''))}
+function offBanner(){return navigator.onLine?'':'<div class="card" style="border-color:var(--g)"><b>📴 You are offline.</b><div class="mut">Offline guide, diary, planner, simulator and saved lessons still work. AI questions are saved and answered automatically when internet returns.</div></div>'}
+var busy=false;
+function processQueue(){var q=ld('queue',[]);if(busy||!q.length||!sample||!navigator.onLine)return;busy=true;sv('queue',[]);
+  q.reduce(function(p,x){return p.then(function(){return sample(SYS+'Reply in '+x.l+'.\n\n'+x.p,{cache:false}).then(function(r){var a=ld('qa',[]);a.push({q:x.p.slice(0,90),a:r.text,d:x.d});sv('qa',a.slice(-20))}).catch(function(){var z=ld('queue',[]);z.push(x);sv('queue',z)})})},Promise.resolve()).then(function(){busy=false;render()})}
+window.addEventListener('online',function(){render();processQueue()});
+window.addEventListener('offline',function(){render()});
+/* Lab */
+function recStat(t,s){var st=ld('stats',{}),k=t.toLowerCase();st[k]=st[k]||{r:0,t:0};st[k].r+=s;st[k].t+=3;sv('stats',st)}
+function weak(){var st=ld('stats',{}),w=null;Object.keys(st).forEach(function(k){if(!w||st[k].r/st[k].t<st[w].r/st[w].t)w=k});if(!w){alert('Take a quiz first so AI can learn your weak topics.');return}lastTopic=w;lastLesson='Core farming knowledge about '+w;tab='student';render();makeQuiz({})}
+var VIS=['Tomato farm visit – Saturday','Water-saving demo – Sunday','Paddy field walk – next Saturday'],B={Tomato:[40000,.35],Paddy:[28000,.15],Banana:[52000,.3],Onion:[34000,.4]},simTxt='';
+function slab(){
+  var st=ld('stats',{}),ks=Object.keys(st),ch=ld('chal',[]).map(function(c,i){return {c:c,i:i}}).sort(function(a,b){return b.c.v-a.c.v}),vs=ld('visits',[]),sm=ld('sim',{n:0,cash:0});
+  var bd=[['🥇','First certificate',certs.length>=1],['📘','Scholar · 3 certificates',certs.length>=3],['🔍','Field scout · 3 photo scans',scans>=3],['🎮','Simulator pro · 3 seasons',sm.n>=3],['🤝','Community voice · posted a challenge',ch.length>=1]];
+  return card('🎯 Adaptive tutor','<p class="mut">AI tracks quiz results and builds your next quiz on your weakest topic.</p>'+(ks.length?ks.map(function(k){var p=Math.round(st[k].r/st[k].t*100);return '<div class="row"><span>'+esc(k)+'</span><span><b>'+p+'%</b> <span class="mut">('+st[k].r+'/'+st[k].t+')</span></span></div>'}).join(''):'<p class="mut">No quiz data yet.</p>')+'<button class="btn" onclick="weak()">Quiz me on my weakest topic</button>')+
+  card('🎮 Virtual farm simulator','<p class="mut">Choose crop, irrigation and when to sell. Each season has random pests and prices.</p><select id="sc1"><option>Tomato</option><option>Paddy</option><option>Banana</option><option>Onion</option></select><select id="sc2" style="margin-top:6px"><option>Drip</option><option>Flood</option></select><select id="sc3" style="margin-top:6px"><option>Sell now</option><option>Wait for better price</option></select><button class="btn" onclick="runSim()">Run season</button><button class="btn alt" onclick="coach(this)">AI coach</button><div id="osm" class="out" style="display:'+(simTxt?'block':'none')+'">'+esc(simTxt)+'</div><div id="oco" class="out"></div><p class="mut">Seasons played: <b id="sn">'+sm.n+'</b> · Total profit: <b id="sp">₹'+sm.cash+'</b></p>')+
+  card('🏅 Skill badges &amp; profile',bd.map(function(x){return '<div class="row"><span>'+x[0]+' '+x[1]+'</span><span class="tag">'+(x[2]?'Earned':'Locked')+'</span></div>'}).join('')+'<button class="btn" onclick="dlProfile()">Download my learner profile</button>')+
+  card('🏘️ Village challenge board','<input id="ct" placeholder="Post a local problem or idea, e.g. cheaper storage for onions"><button class="btn" onclick="postCh()">Post</button>'+(ch.length?ch.map(function(x){return '<div class="row"><span>'+esc(x.c.t)+'<br><span class="mut">'+esc(x.c.by)+'</span></span><button class="btn alt" style="margin:0" onclick="vote('+x.i+')">👍 '+x.c.v+'</button></div>'}).join(''):'<p class="mut">No challenges yet.</p>'))+
+  card('🚜 Farm visit booking','<p class="mut">Book a visit; AI prepares your questions and a report template.</p>'+VIS.map(function(v,i){var bk=vs.indexOf(i)>-1;return '<div class="row"><span>'+v+'</span><span><button class="btn alt" style="margin:0 4px 0 0" onclick="book('+i+')">'+(bk?'Booked ✓':'Book')+'</button>'+(bk?'<button class="btn" style="margin:0" onclick="prep('+i+',this)">AI prep</button>':'')+'</span></div>'}).join('')+'<div id="ovv" class="out"></div>');
+}
+function runSim(){var c=$('sc1').value,ir=$('sc2').value,w=$('sc3').value[0]==='W',b=B[c],p=b[0]*(1+(Math.random()*2-1)*b[1]),ev=[];ir==='Drip'?(p*=1.12,ev.push('Drip saved ~40% water')):(p*=.95,ev.push('Flood irrigation used full water'));if(w){var up=Math.random()<.5;p*=up?1.2:.8;ev.push(up?'Waited and prices rose':'Waited and prices fell')}if(Math.random()<.25){p*=.8;ev.push('Pest attack reduced yield')}p=Math.round(p);var s=ld('sim',{n:0,cash:0});s.n++;s.cash+=p;sv('sim',s);simTxt=c+' season: profit ₹'+p+'. '+ev.join('. ')+'.';$('osm').style.display='block';$('osm').textContent=simTxt;$('sn').textContent=s.n;$('sp').textContent='₹'+s.cash}
+function coach(b){if(!simTxt){alert('Run a season first.');return}ai('A student ran this farm simulator season: '+simTxt+' Explain why it happened and what to try next season. Max 80 words.','oco',b)}
+function dlProfile(){if(!downloads){alert('Download not available here.');return}var sm=ld('sim',{n:0}),t='Agri Knowledge AI – Learner profile\nName: '+(me?me.name:'Learner')+'\nCertificates: '+certs.map(function(c){return c.topic+' ('+c.date+')'}).join(', ')+'\nPhoto scans: '+scans+'\nSimulator seasons: '+sm.n;downloads.save({filename:'learner-profile.txt',data:t}).catch(function(){})}
+function postCh(){var t=$('ct').value.trim();if(!t)return;var c=ld('chal',[]);c.push({t:t,by:me?me.name:'Anonymous',v:0});sv('chal',c);render()}
+function vote(i){var c=ld('chal',[]);c[i].v++;sv('chal',c);render()}
+function book(i){var v=ld('visits',[]);if(v.indexOf(i)<0)v.push(i);sv('visits',v);render()}
+function prep(i,b){ai('A student booked this farm visit: '+VIS[i]+'. Give 8 smart questions to ask the farmer, what to observe, and a short report template. Max 150 words.','ovv',b)}
+render();
+</script>
+</body>
+</html>
